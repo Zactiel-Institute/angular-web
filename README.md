@@ -1,0 +1,1 @@
+Los archivos .bat son ejecutables para no tener que escrbir manualmente los comandos para ejecutar el servidor y verificar la conexion, por lo que son "opcionales" su ejecucion, aunque de igual forma se deben de ejecutar sus comandos en la consola del proyecto
