@@ -1,0 +1,152 @@
+<div class="auth-container">
+  <div class="auth-card" [@slideIn]>
+    <div class="auth-header">
+      <h1>{{ isLogin ? 'Iniciar Sesión' : 'Registrarse' }}</h1>
+      <p>{{ isLogin ? 'Bienvenido de nuevo' : 'Crea tu cuenta' }}</p>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage" [@fadeIn]>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Formulario de Login -->
+    <form *ngIf="isLogin" (ngSubmit)="onLogin()" class="auth-form">
+      <div class="form-group">
+        <label for="login-email">
+          <i class="material-icons">email</i>
+          Email
+        </label>
+        <input
+          type="email"
+          id="login-email"
+          [(ngModel)]="loginData.email"
+          name="email"
+          placeholder="tu@email.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="login-password">
+          <i class="material-icons">lock</i>
+          Contraseña
+        </label>
+        <input
+          type="password"
+          id="login-password"
+          [(ngModel)]="loginData.password"
+          name="password"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        <span *ngIf="!loading">Iniciar Sesión</span>
+        <span *ngIf="loading" class="loading-spinner"></span>
+      </button>
+    </form>
+
+    <!-- Formulario de Registro -->
+    <form *ngIf="!isLogin" (ngSubmit)="onRegister()" class="auth-form">
+      <div class="form-group">
+        <label for="register-nombre">
+          <i class="material-icons">person</i>
+          Nombre Completo
+        </label>
+        <input
+          type="text"
+          id="register-nombre"
+          [(ngModel)]="registerData.nombre"
+          name="nombre"
+          placeholder="Juan Pérez"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="register-email">
+          <i class="material-icons">email</i>
+          Email
+        </label>
+        <input
+          type="email"
+          id="register-email"
+          [(ngModel)]="registerData.email"
+          name="email"
+          placeholder="tu@email.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="register-telefono">
+          <i class="material-icons">phone</i>
+          Teléfono
+        </label>
+        <input
+          type="tel"
+          id="register-telefono"
+          [(ngModel)]="registerData.telefono"
+          name="telefono"
+          placeholder="555-1234"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="register-rol">
+          <i class="material-icons">badge</i>
+          Tipo de Usuario
+        </label>
+        <select id="register-rol" [(ngModel)]="registerData.rol" name="rol" required>
+          <option value="cliente">Cliente - Busco servicios</option>
+          <option value="proveedor">Proveedor - Ofrezco servicios</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="register-password">
+          <i class="material-icons">lock</i>
+          Contraseña
+        </label>
+        <input
+          type="password"
+          id="register-password"
+          [(ngModel)]="registerData.password"
+          name="password"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="register-confirm">
+          <i class="material-icons">lock_outline</i>
+          Confirmar Contraseña
+        </label>
+        <input
+          type="password"
+          id="register-confirm"
+          [(ngModel)]="registerData.confirmPassword"
+          name="confirmPassword"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        <span *ngIf="!loading">Registrarse</span>
+        <span *ngIf="loading" class="loading-spinner"></span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>
+        {{ isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+        <a (click)="toggleMode()" class="link">
+          {{ isLogin ? 'Regístrate' : 'Inicia sesión' }}
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

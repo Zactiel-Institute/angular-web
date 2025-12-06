@@ -1,0 +1,189 @@
+<div class="servicios-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>
+        <i class="material-icons">home_repair_service</i>
+        Servicios Disponibles
+      </h1>
+      <div class="header-actions">
+        <span class="user-info">
+          <i class="material-icons">person</i>
+          {{ authService.getCurrentUser()?.nombre }}
+          <span class="badge">{{ authService.getCurrentUser()?.rol }}</span>
+        </span>
+        <button *ngIf="authService.isProveedor()" class="btn-secondary" (click)="goToMisServicios()">
+          <i class="material-icons">work</i>
+          Mis Servicios
+        </button>
+        <button class="btn-logout" (click)="logout()">
+          <i class="material-icons">logout</i>
+          Salir
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="filters-section">
+    <div class="search-bar">
+      <i class="material-icons">search</i>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+        placeholder="Buscar servicios..."
+      />
+      <button class="btn-search" (click)="onSearch()">Buscar</button>
+    </div>
+
+    <div class="categories-filter">
+      <button
+        class="category-chip"
+        [class.active]="selectedCategoria === null"
+        (click)="filterByCategoria(null)"
+      >
+        <i class="material-icons">apps</i>
+        Todos
+      </button>
+      <button
+        *ngFor="let categoria of categorias"
+        class="category-chip"
+        [class.active]="selectedCategoria === categoria.id"
+        (click)="filterByCategoria(categoria.id)"
+      >
+        <i class="material-icons">{{ categoria.icono }}</i>
+        {{ categoria.nombre }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando servicios...</p>
+  </div>
+
+  <!-- Lista de servicios -->
+  <div *ngIf="!loading" class="servicios-grid">
+    <div *ngFor="let servicio of filteredServicios" class="servicio-card">
+      <div class="servicio-image">
+        <img
+          [src]="servicio.imagen || 'https://via.placeholder.com/400x250?text=Servicio'"
+          [alt]="servicio.titulo"
+        />
+        <div class="servicio-badge">
+          <i class="material-icons">{{ servicio.categoria.icono }}</i>
+          {{ servicio.categoria.nombre }}
+        </div>
+      </div>
+
+      <div class="servicio-content">
+        <h3>{{ servicio.titulo }}</h3>
+        <p class="servicio-descripcion">{{ servicio.descripcion }}</p>
+
+        <div class="servicio-info">
+          <div class="info-item">
+            <i class="material-icons">person</i>
+            <span>{{ servicio.proveedor?.nombre }}</span>
+          </div>
+          <div class="info-item">
+            <i class="material-icons">location_on</i>
+            <span>{{ servicio.ubicacion }}</span>
+          </div>
+          <div class="info-item">
+            <i class="material-icons">phone</i>
+            <span>{{ servicio.proveedor?.telefono }}</span>
+          </div>
+        </div>
+
+        <div class="servicio-rating" *ngIf="servicio.valoracion && servicio.valoracion.total > 0">
+          <div class="stars">
+            <i *ngFor="let star of getStars(servicio.valoracion.promedio)" class="material-icons">
+              {{ star }}
+            </i>
+          </div>
+          <span class="rating-text">
+            {{ servicio.valoracion.promedio }} ({{ servicio.valoracion.total }} valoraciones)
+          </span>
+        </div>
+
+        <div class="servicio-footer">
+          <div class="precio">
+            <span class="precio-amount">${{ servicio.precio }}</span>
+            <span class="precio-tipo">/ {{ servicio.tipo_precio }}</span>
+          </div>
+          <button
+            *ngIf="authService.isCliente()"
+            class="btn-contratar"
+            (click)="openContratarModal(servicio)"
+          >
+            <i class="material-icons">shopping_cart</i>
+            Contratar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="filteredServicios.length === 0" class="no-results">
+      <i class="material-icons">search_off</i>
+      <h3>No se encontraron servicios</h3>
+      <p>Intenta con otros filtros o términos de búsqueda</p>
+    </div>
+  </div>
+
+  <!-- Modal de contratación -->
+  <div *ngIf="showContratarModal" class="modal-overlay" (click)="closeContratarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" [@modalAnimation]>
+      <div class="modal-header">
+        <h2>Contratar Servicio</h2>
+        <button class="btn-close" (click)="closeContratarModal()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedServicio">
+        <div class="servicio-summary">
+          <h3>{{ selectedServicio.titulo }}</h3>
+          <p>Proveedor: {{ selectedServicio.proveedor?.nombre }}</p>
+          <p class="precio-modal">${{ selectedServicio.precio }} / {{ selectedServicio.tipo_precio }}</p>
+        </div>
+
+        <form (ngSubmit)="contratarServicio()">
+          <div class="form-group">
+            <label for="fecha">
+              <i class="material-icons">event</i>
+              Fecha del servicio
+            </label>
+            <input
+              type="date"
+              id="fecha"
+              [(ngModel)]="contratacionData.fecha_servicio"
+              name="fecha"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="mensaje">
+              <i class="material-icons">message</i>
+              Mensaje para el proveedor (opcional)
+            </label>
+            <textarea
+              id="mensaje"
+              [(ngModel)]="contratacionData.mensaje"
+              name="mensaje"
+              rows="4"
+              placeholder="Describe tus necesidades específicas..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <i class="material-icons">check_circle</i>
+            Confirmar Contratación
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

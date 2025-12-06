@@ -1,0 +1,69 @@
+╔══════════════════════════════════════════════════════════════════╗
+║          SOLUCIÓN: ERROR DE MÓDULO @angular/animations          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+❌ ERROR:
+Cannot find module '@angular/animations' or its corresponding type declarations.
+
+✅ SOLUCIÓN:
+
+El paquete @angular/animations no estaba instalado. Ya lo agregué al 
+package.json, ahora solo necesitas instalarlo.
+
+═══════════════════════════════════════════════════════════════════
+
+📋 PASOS PARA SOLUCIONAR:
+
+OPCIÓN 1 - Usando el archivo batch (MÁS FÁCIL):
+────────────────────────────────────────────────
+1. Cierra el servidor de Angular (Ctrl+C en la terminal)
+2. Haz doble clic en: instalar-dependencias.bat
+3. Espera a que termine la instalación
+4. Ejecuta: iniciar-app.bat
+
+OPCIÓN 2 - Manual:
+────────────────────────────────────────────────
+1. Cierra el servidor de Angular (Ctrl+C en la terminal)
+2. Abre una nueva terminal/CMD
+3. Navega a la carpeta:
+   cd c:\xampp\htdocs\Frameworks\Angular\servicios-app
+4. Ejecuta:
+   npm install
+5. Espera a que termine (puede tomar 2-5 minutos)
+6. Inicia el servidor:
+   ng serve
+
+═══════════════════════════════════════════════════════════════════
+
+⏱️ TIEMPO ESTIMADO: 2-5 minutos
+
+📦 QUÉ SE INSTALARÁ:
+- @angular/animations (para las animaciones de la app)
+- Todas las dependencias necesarias
+
+═══════════════════════════════════════════════════════════════════
+
+✅ VERIFICACIÓN:
+
+Después de instalar, deberías ver:
+- "Compiled successfully" en la terminal
+- La aplicación corriendo en http://localhost:4200
+- Sin errores en rojo
+
+═══════════════════════════════════════════════════════════════════
+
+💡 NOTA:
+Este error ocurrió porque el paquete @angular/animations no se 
+instaló automáticamente al crear el proyecto. Es un paquete 
+necesario para las animaciones que hacen que la aplicación se 
+vea más bonita y profesional.
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 DESPUÉS DE INSTALAR:
+
+1. El servidor se iniciará automáticamente
+2. Abre tu navegador en: http://localhost:4200
+3. ¡Disfruta de la aplicación con animaciones! 🎉
+
+═══════════════════════════════════════════════════════════════════

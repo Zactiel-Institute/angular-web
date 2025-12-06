@@ -1,0 +1,108 @@
+╔══════════════════════════════════════════════════════════════════╗
+║              SOLUCIÓN: ERROR 401 (Unauthorized)                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+✅ BUENAS NOTICIAS:
+- Apache está funcionando ✓
+- MySQL está funcionando ✓
+- PHP está funcionando ✓
+- La base de datos existe ✓
+
+❌ PROBLEMA:
+Error 401 al intentar hacer login
+
+🔧 YA CORREGÍ:
+- Agregué headers CORS al archivo login.php
+- Agregué manejo de peticiones OPTIONS
+
+═══════════════════════════════════════════════════════════════════
+
+📋 PASOS PARA VERIFICAR LA SOLUCIÓN:
+
+PASO 1: Probar el login desde PHP directamente
+────────────────────────────────────────────────
+1. Abre tu navegador
+2. Ve a: http://localhost/Frameworks/Angular/backend/api/auth/test-login.php
+3. Deberías ver un JSON con:
+   - "test": "success"
+   - "password_verify": "CORRECTO"
+   - Datos del usuario Juan
+
+Si ves esto, significa que:
+✓ La base de datos tiene los usuarios
+✓ Las contraseñas están correctamente hasheadas
+✓ PHP puede verificar las contraseñas
+
+PASO 2: Probar el login desde Angular
+────────────────────────────────────────────────
+1. Recarga la página de Angular (F5)
+2. Intenta hacer login con:
+   Email: juan@example.com
+   Password: 123456
+3. Debería funcionar ahora
+
+═══════════════════════════════════════════════════════════════════
+
+🔍 SI AÚN NO FUNCIONA:
+
+Opción A: Limpiar caché del navegador
+────────────────────────────────────────────────
+1. Presiona Ctrl + Shift + Delete
+2. Selecciona "Caché" o "Archivos en caché"
+3. Haz clic en "Borrar datos"
+4. Recarga la página (F5)
+
+Opción B: Verificar en la consola
+────────────────────────────────────────────────
+1. Presiona F12
+2. Ve a la pestaña "Network" o "Red"
+3. Intenta hacer login
+4. Busca la petición "login.php"
+5. Haz clic en ella
+6. Ve a la pestaña "Response" o "Respuesta"
+7. Dime qué mensaje ves
+
+═══════════════════════════════════════════════════════════════════
+
+💡 USUARIOS DE PRUEBA:
+
+PROVEEDORES:
+- Email: juan@example.com
+  Password: 123456
+
+- Email: carlos@example.com
+  Password: 123456
+
+CLIENTES:
+- Email: maria@example.com
+  Password: 123456
+
+- Email: ana@example.com
+  Password: 123456
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 VERIFICACIÓN RÁPIDA:
+
+Ejecuta estas URLs en orden:
+
+1. http://localhost/Frameworks/Angular/backend/test.php
+   → Debe mostrar: "status": "success"
+
+2. http://localhost/Frameworks/Angular/backend/api/categorias/read.php
+   → Debe mostrar: Array de 10 categorías
+
+3. http://localhost/Frameworks/Angular/backend/api/auth/test-login.php
+   → Debe mostrar: "test": "success" y "password_verify": "CORRECTO"
+
+Si las 3 funcionan, el backend está 100% operativo.
+
+═══════════════════════════════════════════════════════════════════
+
+📞 SIGUIENTE PASO:
+
+1. Prueba: http://localhost/Frameworks/Angular/backend/api/auth/test-login.php
+2. Dime qué ves
+3. Luego intenta hacer login en Angular de nuevo
+
+═══════════════════════════════════════════════════════════════════

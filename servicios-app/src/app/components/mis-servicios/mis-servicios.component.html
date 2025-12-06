@@ -1,0 +1,216 @@
+<div class="mis-servicios-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>
+        <i class="material-icons">work</i>
+        Mis Servicios
+      </h1>
+      <div class="header-actions">
+        <button class="btn-secondary" (click)="volverAServicios()">
+          <i class="material-icons">arrow_back</i>
+          Ver Todos los Servicios
+        </button>
+        <button class="btn-primary" (click)="openModal()">
+          <i class="material-icons">add_circle</i>
+          Nuevo Servicio
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando tus servicios...</p>
+  </div>
+
+  <!-- Lista de servicios -->
+  <div *ngIf="!loading" class="servicios-grid">
+    <div *ngFor="let servicio of misServicios" class="servicio-card">
+      <div class="servicio-image">
+        <img
+          [src]="servicio.imagen || 'https://via.placeholder.com/400x250?text=Servicio'"
+          [alt]="servicio.titulo"
+        />
+        <div class="servicio-badge">
+          <i class="material-icons">{{ servicio.categoria.icono }}</i>
+          {{ servicio.categoria.nombre }}
+        </div>
+      </div>
+
+      <div class="servicio-content">
+        <h3>{{ servicio.titulo }}</h3>
+        <p class="servicio-descripcion">{{ servicio.descripcion }}</p>
+
+        <div class="servicio-info">
+          <div class="info-item">
+            <i class="material-icons">location_on</i>
+            <span>{{ servicio.ubicacion }}</span>
+          </div>
+          <div class="info-item">
+            <i class="material-icons">event</i>
+            <span>Creado: {{ servicio.fecha_creacion | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="servicio-rating" *ngIf="servicio.valoracion && servicio.valoracion.total > 0">
+          <div class="stars">
+            <i *ngFor="let star of getStars(servicio.valoracion.promedio)" class="material-icons">
+              {{ star }}
+            </i>
+          </div>
+          <span class="rating-text">
+            {{ servicio.valoracion.promedio }} ({{ servicio.valoracion.total }} valoraciones)
+          </span>
+        </div>
+
+        <div class="servicio-footer">
+          <div class="precio">
+            <span class="precio-amount">${{ servicio.precio }}</span>
+            <span class="precio-tipo">/ {{ servicio.tipo_precio }}</span>
+          </div>
+          <div class="servicio-status">
+            <span class="status-badge active">
+              <i class="material-icons">check_circle</i>
+              Activo
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="misServicios.length === 0" class="no-results">
+      <i class="material-icons">work_off</i>
+      <h3>No tienes servicios publicados</h3>
+      <p>Comienza a ofrecer tus servicios creando tu primer anuncio</p>
+      <button class="btn-primary" (click)="openModal()">
+        <i class="material-icons">add_circle</i>
+        Crear Primer Servicio
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal para crear servicio -->
+  <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Crear Nuevo Servicio</h2>
+        <button class="btn-close" (click)="closeModal()">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="crearServicio()">
+          <div class="form-group">
+            <label for="titulo">
+              <i class="material-icons">title</i>
+              Título del servicio *
+            </label>
+            <input
+              type="text"
+              id="titulo"
+              [(ngModel)]="nuevoServicio.titulo"
+              name="titulo"
+              placeholder="Ej: Limpieza profunda de hogar"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="categoria">
+              <i class="material-icons">category</i>
+              Categoría *
+            </label>
+            <select id="categoria" [(ngModel)]="nuevoServicio.categoria_id" name="categoria" required>
+              <option *ngFor="let categoria of categorias" [value]="categoria.id">
+                {{ categoria.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">
+              <i class="material-icons">description</i>
+              Descripción *
+            </label>
+            <textarea
+              id="descripcion"
+              [(ngModel)]="nuevoServicio.descripcion"
+              name="descripcion"
+              rows="4"
+              placeholder="Describe detalladamente tu servicio..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="precio">
+                <i class="material-icons">attach_money</i>
+                Precio *
+              </label>
+              <input
+                type="number"
+                id="precio"
+                [(ngModel)]="nuevoServicio.precio"
+                name="precio"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="tipo_precio">
+                <i class="material-icons">schedule</i>
+                Tipo de precio *
+              </label>
+              <select id="tipo_precio" [(ngModel)]="nuevoServicio.tipo_precio" name="tipo_precio" required>
+                <option value="hora">Por hora</option>
+                <option value="servicio">Por servicio</option>
+                <option value="dia">Por día</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ubicacion">
+              <i class="material-icons">location_on</i>
+              Ubicación *
+            </label>
+            <input
+              type="text"
+              id="ubicacion"
+              [(ngModel)]="nuevoServicio.ubicacion"
+              name="ubicacion"
+              placeholder="Ciudad o zona donde ofreces el servicio"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="imagen">
+              <i class="material-icons">image</i>
+              URL de imagen (opcional)
+            </label>
+            <input
+              type="url"
+              id="imagen"
+              [(ngModel)]="nuevoServicio.imagen"
+              name="imagen"
+              placeholder="https://ejemplo.com/imagen.jpg"
+            />
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="material-icons">check_circle</i>
+            Crear Servicio
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
